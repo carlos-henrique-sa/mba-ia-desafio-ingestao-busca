@@ -1,26 +1,15 @@
 import os
 
-from langchain.chat_models import init_chat_model
-from ingest import access_store
 from langchain.prompts import PromptTemplate
-from langchain.agents import create_react_agent, AgentExecutor
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
-model_openai = ChatOpenAI(model=os.getenv("OPENAI_CHAT_MODEL", "quantfactory/gpt2-xl"), disable_streaming=True)
+from ingest import access_store
 
-message_openai = model_openai.invoke("hello world openai")
-print(message_openai.content)
-
-# model = init_chat_model(
-#     model=os.getenv("GOOGLE_CHAT_MODEL", "gemini-2.5-flash"),
-#     model_provider="google_genai",
-#     temperature=0.5,
-# )
-
-# answer_gemini = model.invoke("hello world gemini")
-# print(answer_gemini.content)
-
-store = access_store()
+model = ChatGoogleGenerativeAI(
+    model=os.getenv("GOOGLE_CHAT_MODEL", "gemini-2.5-flash"),
+    temperature=0.5,
+    max_output_tokens=1024,
+)
 
 PROMPT_TEMPLATE = """
 CONTEXTO:
@@ -48,17 +37,16 @@ PERGUNTA DO USUÁRIO:
 
 RESPONDA A "PERGUNTA DO USUÁRIO"
 """
-prompt = PromptTemplate.from_template(PROMPT_TEMPLATE, input_variables=["contexto", "pergunta"])
+prompt = PromptTemplate.from_template(PROMPT_TEMPLATE)
 
-agent_chain = create_react_agent(llm=model_openai, tools=[], prompt=prompt)
 
-agent_executor = AgentExecutor.from_agent_and_tools(
-    agent=agent_chain, 
-    tools=[], 
-    handling_parsing_errors=True,
-    verbose=True,
-    max_iterations=3
-)
+def search_prompt(question):
+    store = access_store()
+    docs = store.similarity_search(question, k=4)
 
-def search_prompt(question=None):
-    return prompt
+    contexto = "\n\n".join(d.page_content for d in docs)
+
+    formatted = prompt.format(contexto=contexto, pergunta=question)
+    answer = model.invoke(formatted)
+
+    return answer.content
