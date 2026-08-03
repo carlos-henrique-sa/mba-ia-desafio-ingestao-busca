@@ -1,12 +1,5 @@
 import sys
-
 from search import search_prompt
-
-EXIT_COMMANDS = {"sair", "exit", "quit", "q"}
-
-if hasattr(sys.stdout, "reconfigure"):
-    sys.stdout.reconfigure(encoding="utf-8")
-
 
 def main():
     print("Chat iniciado. Digite sua pergunta ou 'sair' para encerrar.")
@@ -17,11 +10,11 @@ def main():
         except (KeyboardInterrupt, EOFError):
             print("\nEncerrando o chat.")
             break
-
+        
         if not question:
             continue
 
-        if question.lower() in EXIT_COMMANDS:
+        if question.lower() == "sair":
             print("Encerrando o chat.")
             break
 

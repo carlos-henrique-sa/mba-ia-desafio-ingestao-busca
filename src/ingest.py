@@ -1,12 +1,11 @@
 import os
 
-from dotenv import load_dotenv
-
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_postgres import PGVector
 from langchain_openai import OpenAIEmbeddings
 from langchain_core.documents import Document
+from langchain_postgres import PGVector
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -15,7 +14,6 @@ for k in ("OPENAI_API_KEY", "PGVECTOR_URL", "PGVECTOR_COLLECTION"):
         raise ValueError(f"Missing required environment variable: {k}")
 
 _store = None
-
 
 def access_store():
     global _store
@@ -40,7 +38,7 @@ def ingest_pdf():
     docs = loader.load()
 
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500, chunk_overlap=100, add_start_index=False
+        chunk_size=1000, chunk_overlap=150, add_start_index=False
     )
 
     chunks = splitter.split_documents(docs)
