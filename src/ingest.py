@@ -47,7 +47,8 @@ enriched_document = [
 ids = [f"doc-{i}" for i in range(len(enriched_document))]
 
 
-embeddings = OpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDINGS_MODEL", "text-embedding-3-small"))
+# situação diferente por conta de usar o lm studio, openai ficou me bloqueando para pagar.
+embeddings = OpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDINGS_MODEL", "text-embedding-3-small"), check_embedding_ctx_length=False)
 
 store = PGVector(
     embeddings=embeddings,
@@ -57,11 +58,10 @@ store = PGVector(
 )
 
 store.add_documents(enriched_document, ids=ids)
-print(store.get_collection_info())
 
-def ingest_pdf():
-    pass
+def access_store():
+    return store
 
 
 if __name__ == "__main__":
-    ingest_pdf()
+    pass
