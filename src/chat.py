@@ -2,9 +2,12 @@ from langchain.chat_models import init_chat_model
 from langchain_openai import ChatOpenAI
 from search import search_prompt
 from dotenv import load_dotenv
+from ingest import ingest_pdf
 import os
 
 load_dotenv()
+
+ingest_pdf()
 
 model_openai = ChatOpenAI(model=os.getenv("OPENAI_CHAT_MODEL", "bzl/gpt-5.4-nano"), temperature=0.5)
 
