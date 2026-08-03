@@ -2,14 +2,14 @@ import os
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_openai import OpenAIEmbeddings
 from langchain_core.documents import Document
 from langchain_postgres import PGVector
 from dotenv import load_dotenv
+from providers import build_embeddings, detect_provider
 
 load_dotenv()
 
-for k in ("OPENAI_API_KEY", "PGVECTOR_URL", "PGVECTOR_COLLECTION"):
+for k in ("PGVECTOR_URL", "PGVECTOR_COLLECTION"):
     if not os.getenv(k):
         raise ValueError(f"Missing required environment variable: {k}")
 
@@ -18,10 +18,7 @@ _store = None
 def access_store():
     global _store
     if _store is None:
-        embeddings = OpenAIEmbeddings(
-            model=os.getenv("OPENAI_EMBEDDINGS_MODEL", "text-embedding-3-small"),
-            check_embedding_ctx_length=False,
-        )
+        embeddings = build_embeddings()
         _store = PGVector(
             embeddings=embeddings,
             connection=os.getenv("PGVECTOR_URL"),

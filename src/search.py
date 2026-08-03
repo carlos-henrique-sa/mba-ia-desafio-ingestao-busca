@@ -1,17 +1,11 @@
-import os
-
 from langchain.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
 from ingest import access_store
+from providers import build_chat_model
 
+load_dotenv()
 
-model = ChatOpenAI(
-    model=os.getenv("LLM_LOCAL_MODEL"),
-    base_url=os.getenv("OPENAI_BASE_URL", "http://localhost:1234/v1"),
-    api_key=os.getenv("OPENAI_API_KEY", "lm-studio"),
-    temperature=0.5,
-    max_tokens=1024,
-)
+model = build_chat_model()
 
 PROMPT_TEMPLATE = """
 CONTEXTO:
