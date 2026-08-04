@@ -10,3 +10,6 @@
 8. docker compose up -d
 9. renomear .env.example para .env (necessário ter APIs válidas ou rodar LLM studio usando google/gemma-4-e2b e text-embedding-nomic-embed-text-v1.5)
 10. python src/chat.py
+11. Perguntar: Qual o faturamento da Empresa SuperTechIABrazil? Resposta esperada: O faturamento foi de 10 milhões de reais.
+12. Perguntar: Quantos clientes temos em 2024? Resposta esperada: Não tenho informações necessárias para responder sua pergunta.
+13. Digite sair para terminar o processo.
