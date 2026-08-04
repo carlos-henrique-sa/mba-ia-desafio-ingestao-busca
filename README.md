@@ -5,6 +5,8 @@
 3. pyenv local 3.11.9 (no meu caso)
 4. python3 -m venv venv
 5. venv/bin/activate.bat (windows)
-6. rodar docker
-7. docker compose up -d
-8. python src/chat.py
+6. pip install -r requirements.txt
+7. rodar docker
+8. docker compose up -d
+9. renomear .env.example para .env
+10. python src/chat.py
